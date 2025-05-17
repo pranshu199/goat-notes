@@ -7,6 +7,8 @@ import { useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { Button } from "./button";
 import Link from "next/link";
+import { Toaster, toast } from 'sonner'
+import { loginAction, signUpAction } from "@/actions/users";
 
 type Props = {
     type: "login" | "register";
@@ -18,11 +20,40 @@ function AuthForm({type}: Props) {
     const [isPending, startTransition] = useTransition();
 
     const handleSubmit = (formData : FormData)=>{
-        console.log("form Submitted");
+        startTransition(async()=>{
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        let errorMessage;
+        let title;
+        let description;
+        if(isLoginForm){
+            const result = await (loginAction(email, password))
+            errorMessage = result.errorMessage;
+            title = "Logged in";
+            description = "You have been succesfully logged in";
+        }else{
+            const result = await (signUpAction(email, password))
+            errorMessage = result.errorMessage;
+            title = "Signed up";
+            description = "Check your email for confirmation link";
+        }
+        if(!errorMessage){
+            toast.success(description);
+            router.replace('/');
+        }else{
+            toast.error("Error");
+        }
+        })
     }
   return (
-    <form action={handleSubmit}>
+    <form onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        handleSubmit(formData);
+    }}>
         <CardContent className="grid w-full items-center gap-4">
+            <Toaster richColors/>
             <div className="flex flex-col space-y-1.5 ">
                <Label htmlFor="email" >Email</Label>
                <Input id="email" name="email" placeholder="Enter your email" type="email" required disabled={isPending} />
