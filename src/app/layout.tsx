@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner"
 import Header from "@/components/Header";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/components/ui/AppSidebar";
+import NoteProvider from "@/providers/NoteProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -27,6 +28,7 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+          <NoteProvider>
           <SidebarProvider>
             <AppSidebar />
             <div className="flex min-h-screen w-full flex-col">
@@ -37,6 +39,7 @@ export default function RootLayout({
             </div>
             </SidebarProvider>
             <Toaster richColors />
+          </NoteProvider>
           </ThemeProvider>
         </body>
       </html>
