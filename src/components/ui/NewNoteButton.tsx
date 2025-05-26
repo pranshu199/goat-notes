@@ -18,13 +18,13 @@ function NewNoteButton({user}: Props) {
 
 const handleClickNewNoteButton = async ()=>{
   if(!user){
-    router.push("/");
+    router.push("/login");
   }else{
     setLoading(true);
   }
   const uuid = uuidv4();
   await createNoteAction(uuid);
-  router.push('/?noteId=$(uuid)')
+  router.push(`/?noteId=${uuid}`)
   toast.success("New note created",)
   setLoading(false);
 }

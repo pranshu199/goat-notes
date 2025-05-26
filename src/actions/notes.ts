@@ -6,7 +6,8 @@ import { handleError } from "@/lib/utils";
 
 export const updateNoteAction = async(noteId: string, text: string) =>{
     try{
-        const user = getUser();
+        const user = await getUser();
+        console.log("updateNoteAction: " + user);
         if(!user){
             throw new Error("must login to update notes");
         }
@@ -32,7 +33,7 @@ export const createNoteAction = async(noteId: string) =>{
             data:{
                 id: noteId,
                 authorId: user.id,
-                text: "this is a demo data notes.ts"
+                text: ""
             },
         });
         return {errorMessage: null}

@@ -6,6 +6,8 @@ import { ChangeEvent, useEffect } from "react";
 import { debounceTimeout } from "@/lib/constants";
 import useNote from "@/hooks/useNote";
 import { updateNoteAction } from "@/actions/notes";
+import { Toaster, toast } from 'sonner';
+
 
 type Props = {
     noteId: string;
@@ -28,10 +30,10 @@ function NoteTextInput({noteId, startingNoteText}: Props) {
     const text = e.target.value;
 
     setNoteText(text);
-
     clearTimeout(updateTimeout);
     updateTimeout = setTimeout(()=>{
       updateNoteAction(noteId, text);
+      toast.success("Saved Current Note ")
     }, debounceTimeout)
   }; 
   return (
