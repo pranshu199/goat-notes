@@ -1,50 +1,52 @@
-"use client"
+"use client";
 
-import { useSearchParams } from "next/navigation";
+import { useEffect, ChangeEvent } from "react";
 import { Textarea } from "./textarea";
-import { ChangeEvent, useEffect } from "react";
-import { debounceTimeout } from "@/lib/constants";
 import useNote from "@/hooks/useNote";
 import { updateNoteAction } from "@/actions/notes";
-import { Toaster, toast } from 'sonner';
-
+import { toast } from "sonner";
+import { useSearchParams } from "next/navigation";
+import { debounceTimeout } from "@/lib/constants";
 
 type Props = {
-    noteId: string;
-    startingNoteText: string;
-}
+  noteId: string;
+  startingNoteText: string;
+};
 
 let updateTimeout: NodeJS.Timeout;
 
-function NoteTextInput({noteId, startingNoteText}: Props) {
-  const noteIdParams = useSearchParams().get(noteId) || "";
-  const {noteText, setNoteText} = useNote();
+function NoteTextInput({ noteId, startingNoteText }: Props) {
+  const searchParams = useSearchParams();
+  const currentNoteId = searchParams.get("noteId") || "";
+  const { noteText, setNoteText } = useNote();
 
-  useEffect( ()=>{
-    if(noteIdParams === noteId){
+  //  Keep noteText in sync with newly selected note
+  useEffect(() => {
+    if (currentNoteId === noteId) {
       setNoteText(startingNoteText);
     }
-  },[startingNoteText, noteIdParams, noteId, setNoteText])
+  }, [noteId, currentNoteId, startingNoteText, setNoteText]);
 
-  const handleUpdateNote = (e:ChangeEvent<HTMLTextAreaElement>)=> {
-    const text = e.target.value;
+  const handleUpdateNote = (e: ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
 
-    setNoteText(text);
+    setNoteText(newText);
+
     clearTimeout(updateTimeout);
-    updateTimeout = setTimeout(()=>{
-      updateNoteAction(noteId, text);
-      toast.success("Saved Current Note ")
-    }, debounceTimeout)
-  }; 
+    updateTimeout = setTimeout(() => {
+      updateNoteAction(noteId, newText);
+      toast.success(" Note saved");
+    }, debounceTimeout);
+  };
+
   return (
-    <Textarea 
-    value ={noteText}
-    onChange={handleUpdateNote}
-    placeholder="Type Your notes here..."
-    className="custom-scrollbar placeholder:text-muted-foreground mb-4 h-full max-w-4xl
-    resize-none border p-4 focus-visible:ring-0 focus-visible:ring-offset-0"
+    <Textarea
+      value={noteText}
+      onChange={handleUpdateNote}
+      placeholder="Type your note here..."
+      className="custom-scrollbar placeholder:text-muted-foreground mb-4 h-full max-w-4xl resize-none border p-4 focus-visible:ring-0 focus-visible:ring-offset-0"
     />
-  )
+  );
 }
 
-export default NoteTextInput
+export default NoteTextInput;

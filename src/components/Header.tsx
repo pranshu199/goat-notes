@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import DarkModeToggle from "./DarkModeToggle"
 import { getUser } from "@/auth/server"
 import LogOutButton from "./LogOutButton"
+import { SidebarTrigger } from "./ui/sidebar"
 
  async function Header() {
   const user = await getUser();
@@ -12,6 +13,7 @@ import LogOutButton from "./LogOutButton"
   return (
     <header className="bg-popover relative flex h-24 w-full items-center justify-between px-3 sm:px-8"
             style={{boxShadow: shadow}}  >
+        <SidebarTrigger className="absolute left-1 top" />
         <Link href="/" className="flex items-end gap-2">
             <Image src="/goatAI.png" className="rounded-full" alt="logo" height={60} width={60}/>
             <h1 className="flex flex-col pb-1 text-2xl font-semibold leading-6">
