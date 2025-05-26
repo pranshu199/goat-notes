@@ -4,7 +4,7 @@ import {shadow} from "@/styles/utils"
 import { Button } from "@/components/ui/button"
 import DarkModeToggle from "./DarkModeToggle"
 import { getUser } from "@/auth/server"
-import LogOutButton from "./LogOutButton"
+import LogOutButton from "./LogoutButton"
 import { SidebarTrigger } from "./ui/sidebar"
 
  async function Header() {
